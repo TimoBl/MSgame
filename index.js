@@ -58,8 +58,6 @@ function next_example(socket, data){
   // and remove it
   data.splice(index, 1)
 
-  console.log(data.length)
-
   // check if 0 
   if (data.length == 0){
     console.log("no more example")

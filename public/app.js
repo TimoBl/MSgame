@@ -123,7 +123,9 @@ function next(obj){
 
               // update count
               if (lesions.length == 0){
-                socket.emit("next", "next")
+                  setTimeout(function(){
+                      socket.emit("next", "next")
+                  }, 500)
               }
 
               $("#lesionCount").text((max_lesions - lesions.length).toString() + "/" + max_lesions.toString() + " lesions found")
