@@ -6,7 +6,7 @@ const path = require('path');
 const httpServer = require("http").createServer(app);
 const options = { /* ... */ };
 const io = require("socket.io")(httpServer, options);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8080;
 
 console.log("starting")
 
@@ -60,13 +60,15 @@ function next_example(socket, data){
 
   // check if 0 
   if (data.length == 0){
-    console.log("no more example")
+    socket.emit("end")
   }
 }
 
 
-// <- Start Server ->
-//httpServer.listen(3000);
+// local serve
+// http://192.168.1.131:8080
+// httpServer.listen(port, "192.168.1.131", function(){
+
 
 //start server 
 httpServer.listen(port, function(){
