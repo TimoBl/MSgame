@@ -7,10 +7,10 @@ const httpServer = require("http").createServer(app);
 const options = { /* ... */ };
 const io = require("socket.io")(httpServer, options);
 
+console.log("starting")
 
 // <- global variables ->
 let metadata;
-
 
 // <- App -> 
 
@@ -68,4 +68,3 @@ function next_example(socket, data){
 
 // <- Start Server ->
 httpServer.listen(3000);
-
