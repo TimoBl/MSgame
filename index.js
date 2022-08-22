@@ -6,6 +6,7 @@ const path = require('path');
 const httpServer = require("http").createServer(app);
 const options = { /* ... */ };
 const io = require("socket.io")(httpServer, options);
+var port = process.env.PORT || 3000;
 
 console.log("starting")
 
@@ -67,4 +68,9 @@ function next_example(socket, data){
 
 
 // <- Start Server ->
-httpServer.listen(3000);
+//httpServer.listen(3000);
+
+//start server 
+httpServer.listen(port, function(){
+  console.log('listening on: ' + port);
+});
