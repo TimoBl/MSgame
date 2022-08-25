@@ -2,7 +2,7 @@ var socket
 var ctx1, ctx2
 
 // for the timer
-var initial = 100000;
+var initial = 30000;
 var count = initial;
 var counter; 
 var initialMillis;
