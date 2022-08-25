@@ -44,6 +44,7 @@ $(document).ready(function() {
 
 // next example
 function next(obj){
+
   // variables
   let loaded = 0 
   let width, height
@@ -118,8 +119,40 @@ function next(obj){
         //ctx2.arc(x * s, y * s, 10, 0, 2 * Math.PI);
         //ctx2.stroke();
 
-        check_lesion(x, y)
+        check_lesion_circle(x, y)
     })
+  }
+
+  function check_lesion_circle(y, x) {
+      let lesions = obj["lesions"]
+
+      let s = 1.5
+
+      for (var i = 0; i < lesions.length; i++){
+          // lesion
+          let lesion = lesions[i]
+      
+          // distance
+          d = Math.sqrt(Math.pow(lesion.cx - x, 2) + Math.pow(lesion.cy - y, 2))
+
+          console.log(x, y, lesion.cx, lesion.cy)
+          
+          // check
+          if (d <= s * lesion.r) {
+
+              // draw lesion
+              draw_lesion(lesion)
+              
+              // remove lesion
+              lesions.splice(i, 1)
+
+              // history
+              history[history.length - 1].lesionsFound++
+
+              break
+
+          }
+      }
   }
 
 
@@ -145,13 +178,6 @@ function next(obj){
 
               // history
               history[history.length - 1].lesionsFound++
-
-              // if lesions is null
-              //if (lesions.length == 0){
-                  //setTimeout(function(){
-                      //socket.emit("next", "next")
-                  //}, 500)
-              //}
 
               //$("#lesionCount").text((max_lesions - lesions.length).toString() + "/" + max_lesions.toString() + " lesions found")
 
