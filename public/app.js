@@ -24,11 +24,6 @@ $(document).ready(function() {
         next(data)
     })
 
-    // skip button
-    $("#skipButton").click(function(e) {
-        socket.emit("next", "next")
-    })
-
     // if examples are finished
     socket.on('end', function(data) {
         endGame()
@@ -48,7 +43,6 @@ function next(obj){
   // variables
   let loaded = 0 
   let width, height
-  let data = obj
 
   // add history
   obj.lesionsFound = 0
@@ -78,8 +72,15 @@ function next(obj){
     if (loaded == 2){
       set_canvas()
       set_mouse()
+      startTimer()
     }
   }
+
+    // skip button
+    $("#skipButton").off('click').click(function(e) {
+        uncover_lesions(obj)
+    }).html("check")
+
 
   // display loaded images
   function set_canvas(){
@@ -103,7 +104,7 @@ function next(obj){
     //$("#lesionCount").text("0/" + max_lesions.toString() + " lesions found")
 
     // set title
-    $("#subjectTitel").text("Subject " + data.subject)
+    $("#subjectTitel").text("Subject " + obj.subject)
   }
 
 
@@ -123,6 +124,7 @@ function next(obj){
     })
   }
 
+  // if user pressed on lesion
   function check_lesion_circle(y, x) {
       let lesions = obj["lesions"]
 
@@ -135,13 +137,11 @@ function next(obj){
           // distance
           d = Math.sqrt(Math.pow(lesion.cx - x, 2) + Math.pow(lesion.cy - y, 2))
 
-          console.log(x, y, lesion.cx, lesion.cy)
-          
           // check
           if (d <= s * lesion.r) {
 
               // draw lesion
-              draw_lesion(lesion)
+              draw_lesion(lesion, "#24e024")
               
               // remove lesion
               lesions.splice(i, 1)
@@ -150,48 +150,71 @@ function next(obj){
               history[history.length - 1].lesionsFound++
 
               break
-
           }
       }
   }
 
 
+  // shows every lesion
+  function uncover_lesions(obj){
+      let lesions = obj["lesions"]
+
+      stop() // stop timer
+
+      for (var i = 0; i < lesions.length; i++){
+          draw_lesion(lesions[i], "#de1d1d")
+      }
+
+      // display count
+      $("#subjectTitel").html(obj.lesionsFound.toString() + " lesions found out of " + obj.lesionsMax.toString())
+
+      // next button
+      $("#skipButton").off('click').click(function(e) {
+          socket.emit("next", "next")
+      }).html("next")
+  }
+
+
+  /* the old way of checking a lesion
   function check_lesion(x, y){
+      let lesions = obj["lesions"]
 
-    let lesions = obj["lesions"]
+      for (var i = 0; i < lesions.length; i++){
+          // lesion
+          let lesion = lesions[i]
 
-    for (var i = 0; i < lesions.length; i++){
-      // lesion
-      let lesion = lesions[i]
+          // coordinates
+          for (var j = 0; j < lesion.x.length; j++){
 
-      // coordinates
-      for (var j = 0; j < lesion.x.length; j++){
+              // check if coordinate
+              if ((lesion.y[j] == x) && (lesion.x[j] == y)){ // I inverted x and y in python
 
-          // check if coordinate
-          if ((lesion.y[j] == x) && (lesion.x[j] == y)){ // I inverted x and y in python
+                  // draw lesion
+                  draw_lesion(lesion)
+                  
+                  // remove lesion
+                  lesions.splice(i, 1)
 
-              // draw lesion
-              draw_lesion(lesion)
-              
-              // remove lesion
-              lesions.splice(i, 1)
+                  // history
+                  history[history.length - 1].lesionsFound++
 
-              // history
-              history[history.length - 1].lesionsFound++
+                  //$("#lesionCount").text((max_lesions - lesions.length).toString() + "/" + max_lesions.toString() + " lesions found")
 
-              //$("#lesionCount").text((max_lesions - lesions.length).toString() + "/" + max_lesions.toString() + " lesions found")
-
-              break
+                  break
+              }
           }
       }
-    }
-  }
+  } */
+
 
   // diplay the lesons on canvas2
-  function draw_lesion(lesion){
+  function draw_lesion(lesion, color){
       for (var j = 0; j < lesion.x.length; j++){
-        ctx2.fillStyle = 'red';
-        ctx2.fillRect(s * lesion.y[j], s * lesion.x[j], s, s);
+          ctx2.fillStyle = color
+          ctx2.strokeStyle = color
+          ctx2.lineWidth = 1
+          ctx2.fillRect(s * lesion.y[j], s * lesion.x[j], s, s)
+          ctx2.strokeRect(s * lesion.y[j], s * lesion.x[j], s, s)
       }
   }
 }
@@ -209,11 +232,15 @@ function timer(){
   }
 }
 
+
+// on top
 function displayCount(count) {
     var res = count / 1000;
     document.getElementById("timer").innerHTML = res.toFixed(1);
 }
 
+
+// end game
 function endGame(){
     clearInterval(counter)
     document.getElementById("timer").innerHTML = "End";
@@ -236,8 +263,9 @@ function endGame(){
     $("#canvas2").remove()
 
     // replace next item
-    $('#skipButton').html("New Game")
-    $('#skipButton').click(function(){ window.location.href = '/' })
+    $('#skipButton').off('click').click(function(){
+        window.location.href = '/' 
+    }).html("New Game")
 }
 
 function startTimer(){
