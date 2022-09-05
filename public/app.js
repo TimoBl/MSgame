@@ -173,11 +173,11 @@ function next(obj){
       // lesion count
       if (obj.lesionsFound == obj.lesionsMax){
           // found every lesion
-          $("#subjectTitel").html("You found every lesion!")
+          //$("#subjectTitel").html("You found every lesion!")
           $("#body").css("border-color", "#24e024")
       } else {
           // not every lesion
-          $("#subjectTitel").html(obj.lesionsFound.toString() + " lesions found out of " + obj.lesionsMax.toString())
+          //$("#subjectTitel").html(obj.lesionsFound.toString() + " lesions found out of " + obj.lesionsMax.toString())
           $("#body").css("border-color", "#de1d1d")
       }
       
