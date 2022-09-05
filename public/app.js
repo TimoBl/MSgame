@@ -82,6 +82,10 @@ function next(obj){
     }).html("check")
 
 
+    // border color
+    $("#body").css("border-color", "black")
+
+
   // display loaded images
   function set_canvas(){
     // the scale is just the largest image we can paint without distortion
@@ -161,12 +165,22 @@ function next(obj){
 
       stop() // stop timer
 
+      // draw missing lesions
       for (var i = 0; i < lesions.length; i++){
           draw_lesion(lesions[i], "#de1d1d")
       }
 
-      // display count
-      $("#subjectTitel").html(obj.lesionsFound.toString() + " lesions found out of " + obj.lesionsMax.toString())
+      // lesion count
+      if (obj.lesionsFound == obj.lesionsMax){
+          // found every lesion
+          $("#subjectTitel").html("You found every lesion!")
+          $("#body").css("border-color", "#24e024")
+      } else {
+          // not every lesion
+          $("#subjectTitel").html(obj.lesionsFound.toString() + " lesions found out of " + obj.lesionsMax.toString())
+          $("#body").css("border-color", "#de1d1d")
+      }
+      
 
       // next button
       $("#skipButton").off('click').click(function(e) {
