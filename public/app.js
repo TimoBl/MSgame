@@ -2,7 +2,7 @@ var socket
 var ctx1, ctx2
 
 // for the timer
-var initial = 30000000;
+var initial = 30000;
 var count = initial;
 var counter; 
 var initialMillis;
@@ -151,7 +151,8 @@ function next(obj){
               lesions.splice(i, 1)
 
               // history
-              history[history.length - 1].lesionsFound++
+              obj.lesionsFound++
+              //history[history.length - 1]
 
               break
           }
