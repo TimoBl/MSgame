@@ -86,26 +86,28 @@ function next(obj){
     $("#body").css("border-color", "black")
 
 
+    $("#container").on('resize', function(){
+        set_canvas()
+    })
+
+
   // display loaded images
   function set_canvas(){
     // the scale is just the largest image we can paint without distortion
     sw = $("#canvas2").parent().width() / img_width
-    sh = ($("#canvas2").parent().parent().parent().height() - 200) / img_height
+    sh = ($("#canvas2").parent().parent().height() - 200) / img_height
     s = Math.min(sw, sh)
 
     // set canvas size
     let w = img_width * s, h = img_height * s
-    $("#canvas1")[0].width = w
-    $("#canvas2")[0].width = w
+    $("#canvas1")[0].width = w 
+    $("#canvas2")[0].width = w 
     $("#canvas1")[0].height = h
     $("#canvas2")[0].height = h
 
     // and draw image
     ctx1.drawImage(img1, 0, 0, w, h)
     ctx2.drawImage(img2, 0, 0, w, h)
-
-    // set count
-    //$("#lesionCount").text("0/" + max_lesions.toString() + " lesions found")
 
     // set title
     $("#subjectTitel").text("Subject " + obj.subject)
